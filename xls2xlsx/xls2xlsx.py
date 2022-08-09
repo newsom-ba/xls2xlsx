@@ -236,7 +236,10 @@ class XLS2XLSX:
 
                     rw = row+1
                     cc = col+1
-                    ws.cell(rw, cc).value = value
+                    try:
+                        ws.cell(rw, cc).value = value
+                    except:
+                        ws.cell(rw, cc).value = XLS2XLSX.escape_xlsx_string(value)
                     font, fill, border, alignment, number_format, protection = self.xls_style_to_xlsx(sheet.cell_xf_index(row, col))
                     #if number_format != 'General':
                         #print(f'({rw},{cc}).number_format = {number_format}')
@@ -318,3 +321,44 @@ class XLS2XLSX:
             wb.save(filename=filename)
             return filename
         return wb
+
+    def escape_xlsx_char(ch):
+        illegal_xlsx_chars = {
+            '\x00': '',  # NULL
+            '\x01': '',  # SOH
+            '\x02': '',  # STX
+            '\x03': '',  # ETX
+            '\x04': '',  # EOT
+            '\x05': '',  # ENQ
+            '\x06': '',  # ACK
+            '\x07': '',  # BELL
+            '\x08': '',  # BS
+            '\x0b': '',  # VT
+            '\x0c': '',  # FF
+            '\x0e': '',  # SO
+            '\x0f': '',  # SI
+            '\x10': '',  # DLE
+            '\x11': '',  # DC1
+            '\x12': '',  # DC2
+            '\x13': '',  # DC3
+            '\x14': '',  # DC4
+            '\x15': '',  # NAK
+            '\x16': '',  # SYN
+            '\x17': '',  # ETB
+            '\x18': '',  # CAN
+            '\x19': '',  # EM
+            '\x1a': '',  # SUB
+            '\x1b': '',  # ESC
+            '\x1c': '',  # FS
+            '\x1d': '',  # GS
+            '\x1e': '',  # RS
+            '\x1f': ''}  # US
+
+        if ch in illegal_xlsx_chars:
+            return illegal_xlsx_chars[ch]
+
+        return ch
+
+    def escape_xlsx_string(st):
+        return ''.join([XLS2XLSX.escape_xlsx_char(ch) for ch in st])
+    
