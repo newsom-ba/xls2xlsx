@@ -247,8 +247,8 @@ class XLS2XLSX:
                         if '\n' in value and not alignment.wrap_text:
                             alignment = copy.deepcopy(alignment)
                             alignment.wrap_text = True
-                        if value[-1:] == '%' and number_format == 'General' and not any(c.isalpha() for c in value):
-                            number_format = numbers.FORMAT_PERCENTAGE
+                        #if value[-1:] == '%' and number_format == 'General' and not any(c.isalpha() for c in value):
+                            #number_format = numbers.FORMAT_PERCENTAGE
                     elif isinstance(value, datetime):
                         if number_format == 'General':
                             number_format = r'm\/d\/yyyy h\:mm\:ss AM/PM'
